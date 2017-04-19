@@ -18,9 +18,9 @@ import com.thinkgem.jeesite.modules.sys.entity.User;
 import com.thinkgem.jeesite.modules.sys.utils.UserUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.Resource;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 
 import java.io.*;
 import java.util.List;
@@ -197,9 +197,11 @@ public class GenUtils {
 	@SuppressWarnings("unchecked")
 	public static <T> T fileToObject(String fileName, Class<?> clazz){
 		try {
-			String pathName = "/templates/modules/gen/" + fileName;
+//			String pathName = "/templates/modules/gen/" + fileName;
+			String pathName = "com/thinkgem/jeesite/modules/gen/templates/"+fileName;
 //			logger.debug("File to object: {}", pathName);
-			Resource resource = new ClassPathResource(pathName); 
+			PathMatchingResourcePatternResolver patternResolver = new PathMatchingResourcePatternResolver();
+			Resource resource = patternResolver.getResource(pathName);
 			InputStream is = resource.getInputStream();
 			BufferedReader br = new BufferedReader(new InputStreamReader(is, "UTF-8"));
 			StringBuilder sb = new StringBuilder();  
