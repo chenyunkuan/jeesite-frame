@@ -23,6 +23,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 
 import java.io.*;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -34,6 +35,9 @@ import java.util.Map;
 public class GenUtils {
 
 	private static Logger logger = LoggerFactory.getLogger(GenUtils.class);
+
+	private  static final List<String> LIST_IGNORE = Arrays.asList("create_date","create_by","del_flag","id");
+	private  static final List<String> EDIT_IGNORE = Arrays.asList("create_date","create_by","del_flag","id","del_flag");
 
 	/**
 	 * 初始化列属性字段
@@ -63,7 +67,9 @@ public class GenUtils {
 				column.setJavaType("java.util.Date");
 				column.setShowType("dateselect");
 			}else if (StringUtils.startsWithIgnoreCase(column.getJdbcType(), "BIGINT")
-					|| StringUtils.startsWithIgnoreCase(column.getJdbcType(), "NUMBER")){
+					|| StringUtils.startsWithIgnoreCase(column.getJdbcType(), "NUMBER")
+					|| StringUtils.startsWithIgnoreCase(column.getJdbcType(), "DECIMAL")
+					|| StringUtils.startsWithIgnoreCase(column.getJdbcType(), "INT")){
 				// 如果是浮点型
 				String[] ss = StringUtils.split(StringUtils.substringBetween(column.getJdbcType(), "(", ")"), ",");
 				if (ss != null && ss.length == 2 && Integer.parseInt(ss[1])>0){
@@ -86,22 +92,19 @@ public class GenUtils {
 			column.setIsPk(genTable.getPkList().contains(column.getName())?"1":"0");
 
 			// 插入字段
-			column.setIsInsert("1");
+//			column.setIsInsert("1");
+			column.setIsInsert(genTable.getPkList().contains(column.getName())?"0":"1");
 			
 			// 编辑字段
-			if (!StringUtils.equalsIgnoreCase(column.getName(), "id")
-					&& !StringUtils.equalsIgnoreCase(column.getName(), "create_by")
-					&& !StringUtils.equalsIgnoreCase(column.getName(), "create_date")
-					&& !StringUtils.equalsIgnoreCase(column.getName(), "del_flag")){
-				column.setIsEdit("1");
+			column.setIsEdit("1");
+			if(EDIT_IGNORE.contains(column.getName().toLowerCase())){
+				column.setIsEdit("0");
 			}
 
 			// 列表字段
-			if (StringUtils.equalsIgnoreCase(column.getName(), "name")
-					|| StringUtils.equalsIgnoreCase(column.getName(), "title")
-					|| StringUtils.equalsIgnoreCase(column.getName(), "remarks")
-					|| StringUtils.equalsIgnoreCase(column.getName(), "update_date")){
-				column.setIsList("1");
+			column.setIsList("1");
+			if(LIST_IGNORE.contains(column.getName().toLowerCase())){
+				column.setIsList("0");
 			}
 			
 			// 查询字段

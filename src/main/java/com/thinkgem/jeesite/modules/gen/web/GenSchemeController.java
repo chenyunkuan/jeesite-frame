@@ -3,6 +3,7 @@
  */
 package com.thinkgem.jeesite.modules.gen.web;
 
+import com.thinkgem.jeesite.common.config.Global;
 import com.thinkgem.jeesite.common.persistence.Page;
 import com.thinkgem.jeesite.common.utils.StringUtils;
 import com.thinkgem.jeesite.common.web.BaseController;
@@ -65,7 +66,8 @@ public class GenSchemeController extends BaseController {
 	@RequestMapping(value = "form")
 	public String form(GenScheme genScheme, Model model) {
 		if (StringUtils.isBlank(genScheme.getPackageName())){
-			genScheme.setPackageName("com.thinkgem.jeesite.modules");
+			genScheme.setPackageName(Global.getConfig("gen.package.name"));
+			genScheme.setModuleName(Global.getConfig("gen.module.name"));
 		}
 //		if (StringUtils.isBlank(genScheme.getFunctionAuthor())){
 //			genScheme.setFunctionAuthor(UserUtils.getUser().getName());
