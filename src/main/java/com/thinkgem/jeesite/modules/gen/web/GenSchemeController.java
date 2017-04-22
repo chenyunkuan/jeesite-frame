@@ -69,9 +69,9 @@ public class GenSchemeController extends BaseController {
 			genScheme.setPackageName(Global.getConfig("gen.package.name"));
 			genScheme.setModuleName(Global.getConfig("gen.module.name"));
 		}
-//		if (StringUtils.isBlank(genScheme.getFunctionAuthor())){
-//			genScheme.setFunctionAuthor(UserUtils.getUser().getName());
-//		}
+		if (StringUtils.isBlank(genScheme.getFunctionAuthor())){
+			genScheme.setFunctionAuthor(Global.getConfig("gen.author"));
+		}
 		model.addAttribute("genScheme", genScheme);
 		model.addAttribute("config", GenUtils.getConfig());
 		model.addAttribute("tableList", genTableService.findAll());
